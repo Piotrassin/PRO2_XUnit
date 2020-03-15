@@ -64,5 +64,17 @@ namespace XUnitTestProject1.Controllers
             Assert.True(users.ElementAt(0).Login == "jd");
         }
 
+        [Fact]
+        public async Task GetUser_200Ok()
+        {
+            var httpResponse = await _client.GetAsync($"{_client.BaseAddress.AbsoluteUri}api/user/1");
+
+            httpResponse.EnsureSuccessStatusCode();
+            var content = await httpResponse.Content.ReadAsStringAsync();
+            var users = JsonConvert.DeserializeObject<User>(content);
+
+            Assert.True(users.IdUser == 1);
+            Assert.True(users.Login == "jd");
+        }
     }
 }

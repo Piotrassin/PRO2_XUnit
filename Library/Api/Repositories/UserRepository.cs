@@ -29,6 +29,7 @@ namespace Library.Repositories
         {
             var newUser = await _context.User.AddAsync(new User
             {
+                IdUser = userToAdd.IdUser,
                 Name = userToAdd.Name,
                 Email = userToAdd.Email,
                 Login = userToAdd.Login,
