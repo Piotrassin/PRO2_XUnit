@@ -17,6 +17,7 @@ namespace Library.Repositories
         {
             var res = await _context.BookBorrow.AddAsync(new BookBorrow
             {
+                IdBookBorrow = borrow.IdBookBorrow,
                 IdUser = borrow.IdUser,
                 IdBook =  borrow.IdBook,
                 BorrowDate = DateTime.Now,
@@ -36,6 +37,7 @@ namespace Library.Repositories
             if (borrowFromDb == null)
                 return false;
 
+            borrowFromDb.IdBookBorrow = borrow.IdBookBorrow;
             borrowFromDb.IdBook = borrow.IdBook;
             borrowFromDb.IdUser = borrow.IdUser;
             borrowFromDb.Comments = borrow.Comments;

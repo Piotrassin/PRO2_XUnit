@@ -90,20 +90,19 @@ namespace XUnitTestProject1.Controllers
                 Password = "BellaCiaoCiaoCiao"
             };
 
-
-            var userToJson = JsonConvert.SerializeObject(newUser, Formatting.Indented);
-            var httpContent = new StringContent(userToJson);
-
-            var buffer = System.Text.Encoding.UTF8.GetBytes(userToJson);
-            var byteContent = new ByteArrayContent(buffer);
-            byteContent.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            var httpResponse = _client.PostAsync($"{_client.BaseAddress.AbsoluteUri}api/users", byteContent).Result;
+            var asda = new StringContent(JsonConvert.SerializeObject(newUser), Encoding.UTF8, "application/json");
+            var httpResponse = _client.PostAsync($"{_client.BaseAddress.AbsoluteUri}api/users", asda).Result;
 
             httpResponse.EnsureSuccessStatusCode();
-            var content = await httpResponse.Content.ReadAsStringAsync();
 
+            using (var scope = _server.Host.Services.CreateScope())
+            {
+                var _db = scope.ServiceProvider.GetRequiredService<LibraryContext>();
 
-
+                Assert.True(_db.User.Count() == 2);
+            }
         }
+
+
     }
 }
