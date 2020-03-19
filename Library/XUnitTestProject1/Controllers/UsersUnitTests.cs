@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using System.Linq;
+using Library.Models.DTO;
 
 namespace XUnitTestProject1.Controllers
 {
@@ -37,6 +38,44 @@ namespace XUnitTestProject1.Controllers
             var r = result as OkObjectResult;
             Assert.True((r.Value as ICollection<User>).Count == 3);
             Assert.True((r.Value as ICollection<User>).ElementAt(0).Name == "kowalski");
-        } 
+        }
+
+
+        [Fact]
+        public async Task AddUser_201Ok()
+        {
+            var m = new Mock<IUserRepository>();
+            var newUser = new User
+            {
+                IdUser = 995,
+                Name = "Mirek",
+                Email = "mir@gmail.com",
+                Login = "Pogomir",
+                Surname = "Pogoda"
+            };
+
+            /// Błąd w tych linijkach: newUser raz powinien byż typu Entities.User, a gdzie indziej UserDto.
+
+            //m.Setup(x => x.AddUser(newUser)).Returns(Task.FromResult(newUser));
+            var controller = new UsersController(m.Object);
+
+            // var result = await controller.AddUser(newUser);
+        }
+
+        [Fact]
+        public async Task GetUser_200Ok()
+        {
+            var m = new Mock<IUserRepository>();
+            var user = new User { IdUser = 1, Name = "Nowak", Email = "nowak@gmail.com" };
+            m.Setup(q => q.GetUser(1)).Returns(Task.FromResult(user));
+            var controller = new UsersController(m.Object);
+
+            var result = await controller.GetUser(1);
+
+            Assert.True(result is OkObjectResult);
+            var r = result as OkObjectResult;
+            Assert.True((r.Value as User).Name == "Nowak");
+
+        }
     }
 }
